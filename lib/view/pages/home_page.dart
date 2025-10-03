@@ -121,6 +121,33 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: const Icon(Icons.delete, color: Colors.white),
                         ),
+                        confirmDismiss: (direction) async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text("Confirm Delete"),
+                              content: Text(
+                                "Are you sure you want to delete ${player.nickname}?",
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: const Text("Cancel"),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                  ),
+                                  child: const Text("Delete"),
+                                ),
+                              ],
+                            ),
+                          );
+                          return confirm == true;
+                        },
                         onDismissed: (_) {
                           context.read<HomeManager>().deletePlayerQuery(
                             player.id,
