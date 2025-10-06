@@ -263,11 +263,9 @@ class _EditFormPageState extends State<EditFormPage> {
                     ),
                     const SizedBox(height: 12),
 
-                    // In your EditFormPage build:
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // RangeSlider with tooltip
                         SliderTheme(
                           data: SliderTheme.of(context).copyWith(
                             showValueIndicator: ShowValueIndicator.always,
@@ -298,7 +296,6 @@ class _EditFormPageState extends State<EditFormPage> {
 
                         const SizedBox(height: 4),
 
-                        // Tick marks row (W / M / S)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: List.generate(21, (index) {
@@ -312,7 +309,6 @@ class _EditFormPageState extends State<EditFormPage> {
 
                         const SizedBox(height: 2),
 
-                        // Level labels row (once per 3 ticks)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -393,3 +389,4 @@ class _EditFormPageState extends State<EditFormPage> {
     );
   }
 }
+
