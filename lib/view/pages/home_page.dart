@@ -85,7 +85,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // Player List
           Expanded(
             child: manager.players.isEmpty
                 ? const Center(child: Text("No players found"))
@@ -94,7 +93,6 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       final player = manager.players[index];
 
-                      // Determine borders for first/last item
                       BorderSide borderSide = const BorderSide(
                         color: Colors.grey,
                         width: 0.5,

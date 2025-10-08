@@ -46,7 +46,6 @@ class HomeManager extends ChangeNotifier {
     _loading = true;
     notifyListeners();
 
-    // Update repository
     updatePlayer(player);
 
     // Update in-memory list
