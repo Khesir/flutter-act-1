@@ -21,7 +21,6 @@ class Player {
     required this.skillLevel,
   });
 
-  /// Convert a numeric value (1-21) to a level-tick label
   static String skillLabel(double value) {
     int v = value.round();
     String level;
