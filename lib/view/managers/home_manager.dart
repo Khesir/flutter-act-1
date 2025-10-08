@@ -38,6 +38,8 @@ class HomeManager extends ChangeNotifier {
     _loading = true;
     notifyListeners();
     addPlayer(player);
+    _players.add(player);
+    _filteredPlayers = [];
     _loading = false;
     notifyListeners();
   }
