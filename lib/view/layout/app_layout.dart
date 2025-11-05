@@ -8,6 +8,7 @@ class AppLayout extends StatelessWidget {
   final bool loading;
   final bool showBottomNav;
   final PreferredSizeWidget? appBar;
+  final IconData floatingActionButtonIcon;
 
   const AppLayout({
     super.key,
@@ -18,6 +19,7 @@ class AppLayout extends StatelessWidget {
     this.onFabPressed,
     this.loading = false,
     this.showBottomNav = false,
+    this.floatingActionButtonIcon = Icons.refresh,
   });
 
   @override
@@ -48,16 +50,22 @@ class AppLayout extends StatelessWidget {
       floatingActionButton: onFabPressed != null
           ? FloatingActionButton(
               onPressed: onFabPressed,
-              child: const Icon(Icons.refresh),
+              child: Icon(floatingActionButtonIcon),
             )
           : null,
       bottomNavigationBar: showBottomNav
           ? BottomNavigationBar(
               currentIndex: currentIndex,
               items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),    
-                BottomNavigationBarItem(icon: Icon(Icons.sports_tennis), label: "Games"),
-                BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.sports_tennis),
+                  label: "Games",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings),
+                  label: "Settings",
+                ),
               ],
               onTap: (index) {
                 if (index == 0) {
@@ -65,7 +73,7 @@ class AppLayout extends StatelessWidget {
                 } else if (index == 1) {
                   Navigator.pushReplacementNamed(context, '/games');
                 } else if (index == 2) {
-                  Navigator.pushReplacementNamed(context, '/settings');
+                  Navigator.pushReplacementNamed(context, '/user-settings');
                 }
               },
             )

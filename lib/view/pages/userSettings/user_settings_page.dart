@@ -23,13 +23,17 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
   void initState() {
     super.initState();
     final settings = context.read<UserSettingsManager>().settings;
-    _courtNameController =
-        TextEditingController(text: settings.defaultCourtName);
-    _courtRateController =
-        TextEditingController(text: settings.defaultCourtRate.toString());
-    _shuttleCockController =
-        TextEditingController(text: settings.shuttleCockPrice.toString());
+    _courtNameController = TextEditingController(
+      text: settings.defaultCourtName,
+    );
+    _courtRateController = TextEditingController(
+      text: settings.defaultCourtRate.toString(),
+    );
+    _shuttleCockController = TextEditingController(
+      text: settings.shuttleCockPrice.toString(),
+    );
     _divideCourtEqually = settings.divideCourtEqually;
+    Future.microtask(() => context.read<UserSettingsManager>().loadSettings());
   }
 
   @override
@@ -46,22 +50,30 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
             children: [
               TextFormField(
                 controller: _courtNameController,
-                decoration: const InputDecoration(labelText: "Default Court Name"),
+                decoration: const InputDecoration(
+                  labelText: "Default Court Name",
+                ),
                 validator: (v) => v!.isEmpty ? 'Required' : null,
               ),
               TextFormField(
                 controller: _courtRateController,
-                decoration: const InputDecoration(labelText: "Default Court Rate"),
+                decoration: const InputDecoration(
+                  labelText: "Default Court Rate",
+                ),
                 keyboardType: TextInputType.number,
-                validator: (v) =>
-                    double.tryParse(v ?? '') == null ? 'Enter a valid number' : null,
+                validator: (v) => double.tryParse(v ?? '') == null
+                    ? 'Enter a valid number'
+                    : null,
               ),
               TextFormField(
                 controller: _shuttleCockController,
-                decoration: const InputDecoration(labelText: "Shuttle Cock Price"),
+                decoration: const InputDecoration(
+                  labelText: "Shuttle Cock Price",
+                ),
                 keyboardType: TextInputType.number,
-                validator: (v) =>
-                    double.tryParse(v ?? '') == null ? 'Enter a valid number' : null,
+                validator: (v) => double.tryParse(v ?? '') == null
+                    ? 'Enter a valid number'
+                    : null,
               ),
               CheckboxListTile(
                 title: const Text("Divide court equally among players"),
@@ -75,7 +87,9 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     final newSettings = UserSettings(
                       defaultCourtName: _courtNameController.text,
                       defaultCourtRate: double.parse(_courtRateController.text),
-                      shuttleCockPrice: double.parse(_shuttleCockController.text),
+                      shuttleCockPrice: double.parse(
+                        _shuttleCockController.text,
+                      ),
                       divideCourtEqually: _divideCourtEqually,
                     );
                     manager.updateSettings(newSettings);

@@ -3,6 +3,7 @@
 class UserSettings {
   final String defaultCourtName;
   final double defaultCourtRate;
+  final double defaultShuttleCockPrice = 60;
   final double shuttleCockPrice;
   final bool divideCourtEqually;
 
@@ -28,9 +29,9 @@ class UserSettings {
   }
 
   static UserSettings get defaultSettings => UserSettings(
-        defaultCourtName: 'Court A',
-        defaultCourtRate: 200.0,
-        shuttleCockPrice: 60.0,
-        divideCourtEqually: true,
-      );
+    defaultCourtName: 'Court A',
+    defaultCourtRate: 200.0,
+    shuttleCockPrice: 60.0,
+    divideCourtEqually: true,
+  );
 }
