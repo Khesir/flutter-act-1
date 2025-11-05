@@ -1,5 +1,5 @@
 import '../entities/player.dart';
-import '../repository/player_repository.dart';
+import '../repositories/player_repository.dart';
 
 class GetPlayers {
   final PlayerRepository repo;

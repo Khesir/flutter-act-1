@@ -55,20 +55,17 @@ class AppLayout extends StatelessWidget {
           ? BottomNavigationBar(
               currentIndex: currentIndex,
               items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-                BottomNavigationBarItem(icon: Icon(Icons.edit), label: "Form"),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.check),
-                  label: "Summary",
-                ),
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),    
+                BottomNavigationBarItem(icon: Icon(Icons.sports_tennis), label: "Games"),
+                BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
               ],
               onTap: (index) {
                 if (index == 0) {
                   Navigator.pushReplacementNamed(context, '/');
                 } else if (index == 1) {
-                  Navigator.pushReplacementNamed(context, '/form');
+                  Navigator.pushReplacementNamed(context, '/games');
                 } else if (index == 2) {
-                  Navigator.pushReplacementNamed(context, '/summary');
+                  Navigator.pushReplacementNamed(context, '/settings');
                 }
               },
             )
