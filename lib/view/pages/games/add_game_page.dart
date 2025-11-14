@@ -28,15 +28,12 @@ class _AddGamePageState extends State<AddGamePage> {
     Future.microtask(() {
       context.read<UserSettingsManager>().loadSettings();
       final settings = context.read<UserSettingsManager>().settings;
-      if (settings != null) {
-        setState(() {
-          _courtNameController.text = settings.defaultCourtName;
-          _courtRateController.text = settings.defaultCourtRate.toString();
-          _shuttlecockPriceController.text = settings.defaultShuttleCockPrice
-              .toString();
-          _divideEqually = settings.divideCourtEqually;
-        });
-      }
+      setState(() {
+        _courtNameController.text = settings.defaultCourtName;
+        _courtRateController.text = settings.defaultCourtRate.toString();
+        _shuttlecockPriceController.text = settings.shuttleCockPrice.toString();
+        _divideEqually = settings.divideCourtEqually;
+      });
     });
   }
 
@@ -49,30 +46,89 @@ class _AddGamePageState extends State<AddGamePage> {
     super.dispose();
   }
 
+  String _formatSchedule(GameSchedule schedule) {
+    final dateFormat = '${schedule.startTime.year}-${schedule.startTime.month.toString().padLeft(2, '0')}-${schedule.startTime.day.toString().padLeft(2, '0')}';
+    final startTime = '${schedule.startTime.hour.toString().padLeft(2, '0')}:${schedule.startTime.minute.toString().padLeft(2, '0')}';
+    final endTime = '${schedule.endTime.hour.toString().padLeft(2, '0')}:${schedule.endTime.minute.toString().padLeft(2, '0')}';
+    return '$dateFormat from $startTime to $endTime';
+  }
+
   void _addSchedule() async {
-    DateTimeRange? range = await showDateRangePicker(
+    // Pick date first
+    final date = await showDatePicker(
       context: context,
+      initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    if (range != null) {
-      setState(() {
-        _schedules.add(
-          GameSchedule(startTime: range.start, endTime: range.end),
-        );
-      });
+
+    if (date == null) return;
+
+    // Pick start time
+    final startTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (startTime == null) return;
+
+    // Pick end time
+    final endTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(
+        hour: (startTime.hour + 2) % 24,
+        minute: startTime.minute,
+      ),
+    );
+
+    if (endTime == null) return;
+
+    // Combine date with times
+    final start = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      startTime.hour,
+      startTime.minute,
+    );
+
+    final end = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      endTime.hour,
+      endTime.minute,
+    );
+
+    // Validate that end is after start
+    if (end.isBefore(start)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("End time must be after start time")),
+      );
+      return;
     }
+
+    setState(() {
+      _schedules.add(GameSchedule(startTime: start, endTime: end));
+    });
   }
 
   void _saveGame() {
     if (_formKey.currentState!.validate() && _schedules.isNotEmpty) {
       final manager = context.read<GameManager>();
 
+      // Generate default title from first schedule date if title is blank
+      String gameTitle;
+      if (_titleController.text.isNotEmpty) {
+        gameTitle = _titleController.text;
+      } else {
+        final firstSchedule = _schedules.first.startTime;
+        gameTitle = '${firstSchedule.year}-${firstSchedule.month.toString().padLeft(2, '0')}-${firstSchedule.day.toString().padLeft(2, '0')} Game';
+      }
+
       final newGame = Game(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        title: _titleController.text.isNotEmpty
-            ? _titleController.text
-            : "Scheduled Game",
+        title: gameTitle,
         courtName: _courtNameController.text,
         schedules: _schedules,
         courtRate: double.tryParse(_courtRateController.text) ?? 0.0,
@@ -155,20 +211,32 @@ class _AddGamePageState extends State<AddGamePage> {
               // Schedules List
               const Text(
                 "Schedules",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              ..._schedules.map(
-                (s) => ListTile(
-                  title: Text("${s.startTime} - ${s.endTime}"),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      setState(() {
-                        _schedules.remove(s);
-                      });
-                    },
-                  ),
-                ),
+              const SizedBox(height: 8),
+              ..._schedules.asMap().entries.map(
+                (entry) {
+                  final index = entry.key;
+                  final s = entry.value;
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        child: Text('${index + 1}'),
+                      ),
+                      title: Text(_formatSchedule(s)),
+                      subtitle: Text('Duration: ${s.hours.toStringAsFixed(1)} hours'),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          setState(() {
+                            _schedules.remove(s);
+                          });
+                        },
+                      ),
+                    ),
+                  );
+                },
               ),
               ElevatedButton.icon(
                 onPressed: _addSchedule,

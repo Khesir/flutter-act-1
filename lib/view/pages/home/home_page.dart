@@ -30,6 +30,26 @@ class _HomePageState extends State<HomePage> {
     Future.microtask(() => context.read<HomeManager>().loadPlayer());
   }
 
+  void _navigateToCreatePlayer() async {
+    await Navigator.pushNamed(context, "/create-player");
+    // Reload players when returning from create player page
+    if (mounted) {
+      context.read<HomeManager>().loadPlayer();
+    }
+  }
+
+  void _navigateToEditPlayer(player) async {
+    await Navigator.pushNamed(
+      context,
+      "/edit-player",
+      arguments: player,
+    );
+    // Reload players when returning from edit player page
+    if (mounted) {
+      context.read<HomeManager>().loadPlayer();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final manager = context.watch<HomeManager>();
@@ -53,9 +73,7 @@ class _HomePageState extends State<HomePage> {
             child: CircleAvatar(
               backgroundColor: Colors.blue,
               child: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, "/create-player");
-                },
+                onPressed: _navigateToCreatePlayer,
                 icon: const Icon(Icons.add, color: Colors.white),
               ),
             ),
@@ -153,13 +171,7 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                         child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              "/edit-player",
-                              arguments: player,
-                            );
-                          },
+                          onTap: () => _navigateToEditPlayer(player),
                           child: Container(
                             margin: const EdgeInsets.symmetric(
                               horizontal: 20,

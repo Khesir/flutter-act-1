@@ -73,7 +73,8 @@ class AppLayout extends StatelessWidget {
                 } else if (index == 1) {
                   Navigator.pushReplacementNamed(context, '/games');
                 } else if (index == 2) {
-                  Navigator.pushReplacementNamed(context, '/user-settings');
+                  // Use pushNamed for settings so user can go back
+                  Navigator.pushNamed(context, '/user-settings');
                 }
               },
             )

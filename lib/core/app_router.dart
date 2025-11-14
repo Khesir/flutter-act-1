@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/di.dart';
 import 'package:flutter_application_1/view/pages/games/add_game_page.dart';
 import 'package:flutter_application_1/view/pages/games/games_page.dart';
+import 'package:flutter_application_1/view/pages/games/view_game_page.dart';
 import 'package:flutter_application_1/view/pages/home/edit_form_page.dart';
 import 'package:flutter_application_1/view/pages/home/form_page.dart';
 import 'package:flutter_application_1/view/pages/home/home_page.dart';
@@ -58,6 +59,15 @@ class AppRouter {
               ),
             ],
             child: AddGamePage(),
+          ),
+        );
+
+      case '/view-game':
+        final gameId = settings.arguments as String;
+        return MaterialPageRoute(
+          builder: (_) => ChangeNotifierProvider.value(
+            value: DI.provideGameManager(),
+            child: ViewGamePage(gameId: gameId),
           ),
         );
 

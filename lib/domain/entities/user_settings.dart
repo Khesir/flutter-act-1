@@ -3,7 +3,6 @@
 class UserSettings {
   final String defaultCourtName;
   final double defaultCourtRate;
-  final double defaultShuttleCockPrice = 60;
   final double shuttleCockPrice;
   final bool divideCourtEqually;
 
